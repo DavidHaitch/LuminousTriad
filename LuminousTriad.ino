@@ -70,7 +70,7 @@ void loop()
 		for (int i = 0; i < 3; i++)
 		{
 
-			int color = inoise8(i * 1500 * brightness, 0, counter);
+			int color = inoise8((i + 1) * 1500 * brightness, 0, counter);
 			color = qsub8(color, 16);
 			color = qadd8(color, scale8(color, 39));
 			leds[i] = ColorFromPalette(palette, (color + offset) % 256, 255, LINEARBLEND);
