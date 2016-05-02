@@ -1,14 +1,15 @@
 #include <FastLED.h>
 #define LED_PIN 3
 
-CRGB leds[3];
-int brightness = 0;
-int targetBrightness = 32;
-int brightnessDir = 1;
+CRGB leds[4]; //Four LEDs, since some models have four. 
 CRGBPalette16 palette;
+
+int brightness = 32;
+int brightnessDir = 1;
+
 void setup()
 {
-	FastLED.addLeds<NEOPIXEL, LED_PIN>(leds, 3);
+	FastLED.addLeds<NEOPIXEL, LED_PIN>(leds, 4);
 	pinMode(0, INPUT);
 
 	//initialize seed by converting each character in the __TIME__ macro to int, and taking the sum.
@@ -20,13 +21,16 @@ void setup()
 
 	srand(seed);
 
-	palette = CRGBPalette16(
-		0xFF0000, 0xD52A00, 0xAB5500, 0xAB7F00,
-		0xABAB00, 0x56D500, 0x00FF00, 0x00D52A,
-		0x00AB55, 0x0056AA, 0x0000FF, 0x2A00D5,
-		0x5500AB, 0x7F0081, 0xAB0055, 0xD5002B);
+  palette = RainbowColors_p;
+  //If you want to define a custom color palette, follow the example below.
+	//palette = CRGBPalette16(
+	//	0xFF0000, 0xD52A00, 0xAB5500, 0xAB7F00,
+	//	0xABAB00, 0x56D500, 0x00FF00, 0x00D52A,
+	//	0x00AB55, 0x0056AA, 0x0000FF, 0x2A00D5,
+	//	0x5500AB, 0x7F0081, 0xAB0055, 0xD5002B);
 }
 
+//Randomize starting positions
 long counter = rand() % 1000000;
 long offset = rand() % 128;
 void loop()
@@ -35,39 +39,23 @@ void loop()
 
 	if (touchState)
 	{
-		if (targetBrightness > 255)
+		if (brightness >= 255)
 		{
 			brightnessDir = -1;
 		}
 
-		if (targetBrightness < -20)
+		if (brightness < 4)
 		{
 			brightnessDir = 1;
 		}
 
-		targetBrightness += brightnessDir;
-	}
-
-	if (targetBrightness < 0)
-	{
-		leds[0] = leds[1] = leds[2] = CRGB::Black;
-		FastLED.show();
-		return;
-	}
-
-	if (brightness < targetBrightness)
-	{
-		brightness++;
-	}
-
-	if (brightness > targetBrightness && brightness > 0)
-	{
-		brightness--;
+		brightness += brightnessDir;
+    delay(10);
 	}
 
 	if (!touchState)
 	{
-		for (int i = 0; i < 3; i++)
+		for (int i = 0; i < 4; i++)
 		{
 
 			int color = inoise8((i + 1) * 1500 * brightness, 0, counter);
@@ -81,14 +69,15 @@ void loop()
 		leds[0] = CRGB(255, 0, 0);
 		leds[1] = CRGB(0, 255, 0);
 		leds[2] = CRGB(0, 0, 255);
+    leds[3] = CRGB(128, 128, 0);
 	}
 
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 4; i++)
 	{
-		leds[i].nscale8(brightness / 2);
+		leds[i].nscale8(brightness);
 	}
 
-	if (rand() % 2 == 0 || counter % (50) == 0)
+	if (rand() % 2 == 0)
 	{
 		offset += 1;
 	}
