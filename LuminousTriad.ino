@@ -69,7 +69,7 @@ void loop()
 		leds[0] = CRGB(255, 0, 0);
 		leds[1] = CRGB(0, 255, 0);
 		leds[2] = CRGB(0, 0, 255);
-    leds[3] = CRGB(128, 128, 0);
+    		leds[3] = CRGB(128, 128, 0);
 	}
 
 	for (int i = 0; i < 4; i++)
